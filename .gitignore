@@ -1,0 +1,17 @@
+venv/
+data/
+models/
+*.png
+*.jpg
+*.swp
+venv/
+data/
+models/
+*.pth
+*.png
+venv/
+__pycache__/
+data/
+models/
+*.pth
+*.png
