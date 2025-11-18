@@ -1,4 +1,3 @@
-# train_v1.py
 import os
 import torch
 import torch.nn as nn
@@ -39,16 +38,19 @@ print("Class names:", train_dataset.classes)
 model = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
 model.fc = nn.Linear(model.fc.in_features, len(train_dataset.classes))
 
-# 冻结前面层，只训练最后层
-for param in model.parameters():
-    param.requires_grad = False
-for param in model.fc.parameters():
-    param.requires_grad = True
+# ========== 关键修改1：删除“冻结前层”的代码 ==========
+# （直接删掉下面这2行冻结逻辑，让所有层都可训练）
+# for param in model.parameters():
+#     param.requires_grad = False
+# for param in model.fc.parameters():
+#     param.requires_grad = True
 
 model = model.to(device)
 
-# 优化器：只训练最后层
-optimizer = torch.optim.Adam(model.fc.parameters(), lr=0.001)
+# ========== 关键修改2：优化器改为训练所有参数 ==========
+# 原来：只训练fc层（model.fc.parameters()）
+# 现在：训练所有层（model.parameters()）
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)  # 改动这里
 criterion = nn.CrossEntropyLoss()
 
 epochs = 5
